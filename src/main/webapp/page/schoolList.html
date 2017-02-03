@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title></title>
+<link rel="stylesheet" href="../style/weui.css" />
+<script type="text/javascript" src="../style/common.js"></script>
+</head>
+<body>
+	<div class="page">
+		<div class="page__hd">
+			<h1 id="pageTitle" class="page__title">校友录</h1>
+			<p id="pageDesc" class="page__desc">认领情况</p>
+		</div>
+		
+		<div id="pageBd" class="page__bd">
+		
+		
+		</div>
+	
+		<div id="pageFt" class="page__ft">
+			<a href="javascript:myHome()"><img width="168"
+				src="../images/icon_footer_link.png" /></a>
+		</div>
+	</div>
+
+	<!-- <div class="weui-cells__title">带图标、说明、跳转的列表项</div> -->
+	<div id="item" class="weui-cells" style="display: none;">
+
+		<a class="weui-cell weui-cell_access" href="javascript:;"> 
+		<!-- <div class="weui-cell__hd">
+						<img
+							src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAAAVFBMVEXx8fHMzMzr6+vn5+fv7+/t7e3d3d2+vr7W1tbHx8eysrKdnZ3p6enk5OTR0dG7u7u3t7ejo6PY2Njh4eHf39/T09PExMSvr6+goKCqqqqnp6e4uLgcLY/OAAAAnklEQVRIx+3RSRLDIAxE0QYhAbGZPNu5/z0zrXHiqiz5W72FqhqtVuuXAl3iOV7iPV/iSsAqZa9BS7YOmMXnNNX4TWGxRMn3R6SxRNgy0bzXOW8EBO8SAClsPdB3psqlvG+Lw7ONXg/pTld52BjgSSkA3PV2OOemjIDcZQWgVvONw60q7sIpR38EnHPSMDQ4MjDjLPozhAkGrVbr/z0ANjAF4AcbXmYAAAAASUVORK5CYII="
+							alt="" style="width: 20px; margin-right: 5px; display: block">
+					</div> -->
+			<div class="weui-cell__bd">
+				<p>cell standard</p>
+			</div>
+			<div class="weui-cell__ft">
+				<p>说明文字</p>
+			</div>
+		</a>
+	</div>
+	<div id="formRemark" style="display: none;" class="weui-cells__tips">底部说明文字底部说明文字</div>
+	
+</body>
+
+<script type="text/javascript">
+	
+	//document.getElementById("");
+	//new Node().nodeValue;
+	
+	var pageTitle = document.getElementById("pageTitle");
+	var pageDesc = document.getElementById("pageDesc");
+	var pageBd = document.getElementById("pageBd");
+	var formRemark = document.getElementById("formRemark");
+	var pageFt = document.getElementById("pageFt");
+	var item = document.getElementById("item");
+	
+	//var urlSchoolList = "../json/schoolList.json";
+	var urlSchoolList = "../school/schoolList.do";
+	
+	window.onload = function() {  
+
+		//console.info(window.location.search);
+		ajaxGet(urlSchoolList+window.location.search, function(stringData){
+			
+			//console.info(stringData);
+			var data = JSON.parse(stringData).data[0];
+			
+			if(data){
+				
+				var schoolData = data;
+			
+				schoolCode = schoolData.schoolCode;
+				schoolWX = schoolData.schoolWX;
+				schoolLogoUrl = schoolData.schoolLogoUrl;
+				
+				document.title = schoolWX;
+				pageFt.getElementsByTagName("a")[0].href = "javascript:myHome(\""+schoolCode+"\")";
+				pageFt.getElementsByTagName("img")[0].src = schoolLogoUrl;
+				
+				pageTitle.innerText = schoolData.school + "校友录";
+				
+				var schoolClaimResult1 = 0;
+				var schoolClaimResult2 = 0;
+				
+				for (var j = 0; j < schoolData.year.length; j++) {
+					var yearData = schoolData.year[j];
+					
+					var newYearNode = item.cloneNode(true);
+					newYearNode.style.display = "block";
+					
+					schoolClaimResult1 += yearData.claimResult1;
+					schoolClaimResult2 += yearData.claimResult2;
+					
+					newYearNode.getElementsByTagName("p")[0].innerText=yearData.year;
+					newYearNode.getElementsByTagName("p")[1].innerText=yearData.claimResult1+"/"+yearData.claimResult2;
+					newYearNode.getElementsByTagName("a")[0].setAttribute("href", "studentList.html"+"?yearCode="+yearData.yearCode+"&year="+yearData.year+"&schoolName="+schoolData.school
+							+"&schoolCode="+schoolCode+"&schoolWX="+schoolWX+"&schoolLogoUrl="+schoolLogoUrl);
+					
+					pageBd.appendChild(newYearNode);
+				}
+				
+				var newFormRemarkNode = formRemark.cloneNode(true);
+				newFormRemarkNode.innerText = "若你所毕业的届数不在列表中，请在我们微信公众号“"+schoolWX+"”"+"留言【届数+姓名】，我们确认后将加入列表";
+				newFormRemarkNode.style.display = "block";
+				pageBd.appendChild(newFormRemarkNode);
+				
+				pageDesc.innerText="认领情况："+schoolClaimResult1+"/"+schoolClaimResult2;
+			}
+			
+		});
+
+	}
+	
+</script>
+
+</html>

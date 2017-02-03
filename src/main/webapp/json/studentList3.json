@@ -1,0 +1,25 @@
+{
+		"school" : "麻城一中",
+		"schoolWX":"麻城一中校友联谊会",
+		"year":"2007",
+		"itemList" : [
+				{
+					"student" : "甘婷",
+					"code":"42_20_0001_2007_0001",
+					"headUrl" : "",
+					"result" : "0"
+				},
+				{
+					"student" : "王文武",
+					"code":"42_20_0001_2007_0002",
+					"headUrl" : "https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3174886326,3468025615&fm=116&gp=0.jpg",
+					"result" : "1"
+				},
+				{
+					"student" : "周兰",
+					"code":"42_20_0001_2007_0003",
+					"headUrl" : "https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1861074918,2424716124&fm=111&gp=0.jpg",
+					"result" : "0"
+				} ],
+		"loginPO":{"claimMobilephone":"15171466149","claimStudentCode":"42_20_0001_2007_0002","claimStudent":"王文武","claimStudentStatus":"1"}
+}

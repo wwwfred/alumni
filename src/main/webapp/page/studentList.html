@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title></title>
+<link rel="stylesheet" href="../style/weui.css" />
+<script type="text/javascript" src="../style/common.js"></script>
+</head>
+<body>
+	<div class="page">
+		<div class="page__hd">
+			<h1 id="pageTitle" class="page__title">学校</h1>
+			<p id="pageDesc" class="page__desc">届数</p>
+		</div>
+
+		<div id="pageBd" class="page__bd">
+			<!-- <a href="javascript:;" class="weui-btn weui-btn_primary">点击展现searchBar</a> -->
+			<div class="weui-search-bar" id="searchBar">
+				<form class="weui-search-bar__form">
+					<div class="weui-search-bar__box">
+						<i class="weui-icon-search"></i> <input type="search"
+							class="weui-search-bar__input" id="searchInput" placeholder="搜索"
+							required /> <a href="javascript:" class="weui-icon-clear"
+							id="searchClear"></a>
+					</div>
+					<!-- <label class="weui-search-bar__label" id="searchText">
+                    <i class="weui-icon-search"></i>
+                    <span>搜索</span>
+                </label> -->
+				</form>
+				<!-- <a href="javascript:" class="weui-search-bar__cancel-btn" id="searchCancel">取消</a> -->
+			</div>
+			<div class="weui-cells searchbar-result" id="searchResult"></div>
+
+			
+
+		</div>
+
+		<div id="pageFt" class="page__ft">
+			<a href="javascript:myHome()"><img width="168"
+				src="../images/icon_footer_link.png" /></a>
+		</div>
+	</div>
+
+	<!-- <div class="weui-cells__title">带图标、说明、跳转的列表项</div> -->
+	<a id="searchResultItem" class="weui-cell weui-cell_access" style="display: none;" href="javascript:;">
+		<div style="display: none">
+			<h3></h3>
+		</div>
+		<!-- <div class="weui-cell__hd weui-cell_primary">
+			<img src="../images/head.jpg" alt=""
+				style="width: 20px; margin-right: 5px; display: block">
+		</div> -->
+		<div class="weui-cell__bd weui-cell_primary">
+			<p>cell standard</p>
+		</div>
+		<div class="weui-cell__ft weui-cell_primary">
+			<p>说明文字</p>
+		</div>
+	</a>
+	
+	<div class="weui-cells" id="resultItem" style="display: none;">
+	<a class="weui-cell weui-cell_access" href="javascript:;">
+		<div style="display: none">
+			<h3></h3>
+		</div>
+		<div class="weui-cell__hd">
+			<img src="../images/head.jpg" alt=""
+				style="width: 20px; margin-right: 5px; display: block">
+		</div>
+		<div class="weui-cell__bd">
+			<p>cell standard</p>
+		</div>
+		<div class="weui-cell__ft">
+			<p>说明文字</p>
+		</div>
+	</a>
+	</div>
+	
+	<div id="formRemark" style="display: none;" class="weui-cells__tips">底部说明文字底部说明文字</div>
+
+	<!--BEGIN dialog1-->
+	<div class="js_dialog" id="dialog1" style="display: none;">
+		<div class="weui-mask"></div>
+		<div class="weui-dialog">
+			<div id="dialog1Message" class="weui-dialog__bd">弹窗内容，告知当前状态、信息和解决方法，描述文字尽量控制在三行内</div>
+			<div class="weui-dialog__ft">
+				<a id="closeDialog1Button" href="javascript:;"
+					class="weui-dialog__btn weui-dialog__btn_primary">知道了</a>
+			</div>
+		</div>
+	</div>
+	<!--END dialog1-->
+
+	<!-- <div class="js_dialog" id="dialog2" style="display: none">
+		<div class="weui-mask"></div>
+		<div class="weui-dialog">
+			<div id="dialog2Message" class="weui-dialog__bd">只有注册登录后才能认领或查看校友详情，填写手机号</div>
+			<div class="weui-dialog__ft">
+				<div class="weui-cell">
+                	<div class="weui-cell__hd">
+                		<input id="dialog2Input" class="weui-input" type="number" pattern="[0-9]*" placeholder=""/>
+                	<a id="closeDialog2Button" href="javascript:;"
+						class="weui-dialog__btn weui-dialog__btn_primary">确认</a>
+					<a id="closeDialog3Button" href="javascript:;"
+						class="weui-dialog__btn weui-dialog__btn_primary">取消</a>
+                	</div>
+            	</div>
+            </div>
+		</div>
+	</div> -->
+
+	<!--BEGIN dialog2-->
+	<div class="js_dialog" id="dialog2" style="display: none;">
+		<div class="weui-mask"></div>
+		<div class="weui-dialog">
+			<div class="weui-dialog__hd">
+				<strong class="weui-dialog__title">注册/登录</strong>
+			</div>
+			<div class="weui-dialog__bd">只有注册登录后才能认领或查看校友详情</div>
+			<div class="weui-dialog__ft">
+				<a href="javascript:;" id="buttonCancel"
+					class="weui-dialog__btn weui-dialog__btn_default">取消</a> <a
+					href="javascript:;" id="buttonReg"
+					class="weui-dialog__btn weui-dialog__btn_default">注册</a> <a
+					href="javascript:;" id="buttonLogin"
+					class="weui-dialog__btn weui-dialog__btn_primary">登录</a>
+			</div>
+		</div>
+	</div>
+	<!--END dialog2-->
+
+</body>
+
+<script type="text/javascript">
+	//document.getElementById("");
+	//new Node()
+
+	var pageTitle = document.getElementById("pageTitle");
+	var pageDesc = document.getElementById("pageDesc");
+	var pageBd = document.getElementById("pageBd");
+	var formRemark = document.getElementById("formRemark");
+	var pageFt = document.getElementById("pageFt");
+	
+	var searchInput = document.getElementById("searchInput");
+	var searchClear = document.getElementById("searchClear");
+	var searchResult = document.getElementById("searchResult");
+	var searchResultItem = document.getElementById("searchResultItem");
+	var resultItem = document.getElementById("resultItem");
+	
+	
+	var dialog1 = document.getElementById("dialog1");
+	var dialog2 = document.getElementById("dialog2");
+	var dialog1Message = document.getElementById("dialog1Message");
+	var closeDialog1Button = document.getElementById("closeDialog1Button");
+	//var closeDialog2Button = document.getElementById("closeDialog2Button");
+	//var dialog2Input = document.getElementById("dialog2Input");
+	var buttonCancel = document.getElementById("buttonCancel");
+	var buttonReg = document.getElementById("buttonReg");
+	var buttonLogin = document.getElementById("buttonLogin");
+
+	//var urlStudentList = "../json/studentList1.json";
+	//var urlIsMobileReg = "../json/isMobileReg.json";
+	var urlStudentList = "../student/studentList.do";
+	var urlIsMobileReg = "../user/isMobileReg.do";
+
+	var studentMap = getMap();
+	
+	var loginMobilephone;
+	var loginStudentID;
+	var loginStudentName;
+
+	var yearCode;
+
+	var closeDialog = function(dialog) {
+		//console.info(dialog);
+		dialog.style.display = "none";
+	}
+
+	var claimOrInfo = function(selectStudentCode, selectStudentName,
+			selectStudentID) {
+		// claim
+		if (!selectStudentID) {
+			if (loginStudentID) {
+				dialog1Message.innerText = "系统确认你已认领“" + loginStudentName
+						+ "”，不能再认领“" + selectStudentName + "”，如有疑问请在微信公众号“"
+						+ schoolWX + "”给我们留言";
+				dialog1.style.display = "block";
+			} else {
+				location.href = "studentClaim.html" + "?studentCode="
+						+ selectStudentCode + "&school=" + pageTitle.innerText
+						+ "&year=" + pageDesc.innerText + "&student="
+						+ selectStudentName + "&mobilephone="
+						+ loginMobilephone + "&schoolCode=" + schoolCode
+						+ "&schoolWX=" + schoolWX + "&schoolLogoUrl="
+						+ schoolLogoUrl;
+			}
+		}
+		// info
+		else {
+			if (!loginStudentID) {
+				dialog1Message.innerText = "系统检测到你暂未认领，请先去校友录中找到自己并认领后才能查看其他校友详细信息";
+				dialog1.style.display = "block";
+			} else {
+				location.href = "studentInfo.html" + "?studentCode="
+						+ selectStudentCode + "&schoolCode=" + schoolCode
+						+ "&schoolWX=" + schoolWX + "&schoolLogoUrl="
+						+ schoolLogoUrl;
+			}
+		}
+	}
+
+	/* var studentRegLogin = function(stringData) {
+		console.info(stringData);
+		var data = JSON.parse(stringData).data;
+		if ("1" == data.regResult) {
+			location.href = "userLogin.html" + "?mobilephone="
+					+ data.mobilephone + "&schoolWX=" + schoolWX;
+		} else {
+			location.href = "userReg.html" + "?mobilephone=" + data.mobilephone
+					+ "&schoolWX=" + schoolWX;
+		}
+	} */
+
+	var studentClick = function(node, dataList) {
+		var selectStudentCode = node.getElementsByTagName("h3")[0].innerText;
+		var dataOne;
+		for (var i = 0; i < dataList.length; i++) {
+			if (selectStudentCode == dataList[i].code) {
+				dataOne = dataList[i];
+				break;
+			}
+		}
+		//console.info(dataOne);
+		var selectStudentName = dataOne.name;
+		var selectStudentID = dataOne.studentID;
+		//console.info("selectStudentCode:"+selectStudentCode);
+		//console.info("selectStudentName:"+selectStudentName);
+		//console.info("selectStudentID:"+selectStudentID);
+		if (!loginMobilephone) {
+			dialog2.style.display = "block";
+		} else {
+			claimOrInfo(selectStudentCode, selectStudentName, selectStudentID);
+		}
+
+	};
+	
+	var initSearchResultData = function(studentList,name)
+	{
+		for (var i = 0; i < searchResult.childNodes.length; i) {
+			searchResult.removeChild(searchResult.childNodes[i]);
+		}
+		for (var i = 0; i < studentList.length; i++) {
+			var dataOne = studentList[i];
+
+			var studentName = dataOne.name;
+			if(studentName.indexOf(name)<0)
+			{
+				continue;
+			}
+			
+			var studentNode = searchResultItem.cloneNode(true);
+			studentNode.style.display = "block";
+
+			studentNode.getElementsByTagName("h3")[0].innerText = dataOne.code;
+			/* studentNode.getElementsByTagName("img")[0].setAttribute("src",
+					dataOne.studentHeadUrl ? dataOne.studentHeadUrl
+							: "../images/head.jpg"); */
+			studentNode.getElementsByTagName("p")[0].innerText = dataOne.name;
+			studentNode.getElementsByTagName("p")[1].innerText = (dataOne.studentID ? "查看详情"
+					: "认领");
+			studentNode.onclick = function() {
+				studentClick(this, studentList);
+			};
+			searchResult.appendChild(studentNode);
+		}
+		
+	};
+
+	var initDataAndPage = function(stringData) {
+		//console.info(stringData);
+		var data = JSON.parse(stringData).data;
+
+		if (data.loginPO) {
+			loginMobilephone = data.loginPO.mobilephone;
+			loginStudentID = data.loginPO.studentID;
+			loginStudentName = data.loginPO.studentName;
+			//console.info("loginMobilephone："+loginMobilephone);
+			//console.info("loginStudentID:"+loginStudentID);
+			//console.info("loginStudentName:"+loginStudentName);
+		}
+
+		//console.info(data.yearStudent);
+		if (data.yearStudent) {
+			studentMap.put(yearCode,data.yearStudent);
+			for (var i = 0; i < data.yearStudent.length; i++) {
+				var dataOne = data.yearStudent[i];
+
+				var studentNode = resultItem.cloneNode(true);
+				studentNode.style.display = "block";
+
+				studentNode.getElementsByTagName("h3")[0].innerText = dataOne.code;
+				studentNode.getElementsByTagName("img")[0].setAttribute("src",
+						dataOne.studentHeadUrl ? dataOne.studentHeadUrl
+								: "../images/head.jpg");
+				studentNode.getElementsByTagName("p")[0].innerText = dataOne.name;
+				studentNode.getElementsByTagName("p")[1].innerText = (dataOne.studentID ? "查看详情"
+						: "认领");
+				studentNode.getElementsByTagName("a")[0].onclick = function() {
+					studentClick(this, data.yearStudent);
+				};
+				pageBd.appendChild(studentNode);
+			}
+
+		}
+	}
+
+	window.onload = function() {
+
+		schoolCode = request.QueryString("schoolCode");
+		schoolWX = request.QueryString("schoolWX");
+		schoolLogoUrl = request.QueryString("schoolLogoUrl");
+
+		yearCode = request.QueryString("yearCode");
+		var schoolName = request.QueryString("schoolName");
+		var year = request.QueryString("year");
+
+		pageTitle.innerText = schoolName;
+		pageDesc.innerText = year;
+
+		document.title = schoolWX;
+		pageFt.getElementsByTagName("a")[0].href = "javascript:myHome(\""
+				+ schoolCode + "\")";
+		pageFt.getElementsByTagName("img")[0].src = schoolLogoUrl;
+		
+		var newFormRemarkNode = formRemark.cloneNode(true);
+		newFormRemarkNode.innerText = "若你的名字不在列表中，请在我们微信公众号“" + schoolWX
+				+ "”" + "留言【届数+姓名】，我们确认后将加入列表";
+		newFormRemarkNode.style.display = "block";
+		pageBd.appendChild(newFormRemarkNode);
+		
+		searchInput.oninput = function() {
+			if(searchInput.value&&""!=searchInput.value)
+			{
+				var studentList = studentMap.get(yearCode);
+				if(studentList)
+				{
+					initSearchResultData(studentList,searchInput.value);
+				}
+				else
+				{
+					ajaxGet(urlStudentList +"?yearCode="+yearCode+"&name="+searchInput.value, function(stringData){
+						
+						//console.info(stringData);
+						var data = JSON.parse(stringData).data;
+						if (data.yearStudent) {
+							studentMap.put(yearCode,data.yearStudent);
+							initSearchResultData(data.yearStudent,searchInput.value);
+						}
+					});
+				}
+			}
+		};
+		
+		searchClear.onclick = function()
+		{
+			searchInput.value = "";
+			for (var i = 0; i < searchResult.childNodes.length; i) {
+				searchResult.removeChild(searchResult.childNodes[i]);
+			}
+		};
+
+		closeDialog1Button.onclick = function() {
+			closeDialog(dialog1)
+		};
+		/* closeDialog2Button.onclick = function() {
+			var inputMobile = dialog2Input.value;
+			console.info(inputMobile);
+			if (inputMobile) {
+				closeDialog(dialog2);
+				ajaxGet(urlIsMobileReg + "?mobilephone=" + inputMobile,
+						studentRegLogin);
+			}
+
+		}; */
+		buttonCancel.onclick = function() {
+			closeDialog(dialog2);
+		};
+		buttonReg.onclick = function() {
+			location.href = "userReg.html" + "?mobilephone=" + ""
+					+ "&schoolCode=" + schoolCode + "&schoolWX=" + schoolWX
+					+ "&schoolLogoUrl=" + schoolLogoUrl;
+		};
+		buttonLogin.onclick = function() {
+			location.href = "userLogin.html" + "?mobilephone=" + ""
+					+ "&schoolCode=" + schoolCode + "&schoolWX=" + schoolWX
+					+ "&schoolLogoUrl=" + schoolLogoUrl;
+		};
+
+		ajaxGet(urlStudentList + window.location.search, initDataAndPage);
+	}
+</script>
+
+</html>

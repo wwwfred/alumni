@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title></title>
+<link rel="stylesheet" href="../style/weui.css" />
+<script type="text/javascript" src="../style/common.js"></script>
+<script type="text/javascript" src="../style/md5.js"></script>
+</head>
+<body>
+	<div class="page">
+		<div class="page__hd">
+			<h1 id="pageTitle" class="page__title">帐号注册</h1>
+			<!-- <p id="pageDesc" class="page__desc">list</p> -->
+		</div>
+		
+		<div class="page__bd">
+		<div id="formHead" class="weui-cells__title" style="color: red"></div>
+        <div class="weui-cells weui-cells_form">
+            <div class="weui-cell weui-cell_vcode">
+                <div class="weui-cell__hd"><label class="weui-label">图形验证码</label></div>
+                <div class="weui-cell__bd">
+                    <input id="inputImageCode" class="weui-input" type="text" placeholder="请输入验证码"/>
+                </div>
+                <div class="weui-cell__ft">
+                    <img class="weui-vcode-img" src="../images/vcode.jpg" />
+                </div>
+            </div>
+            <div class="weui-cell weui-cell_vcode">
+                <div class="weui-cell__hd"><label class="weui-label">手机号</label></div>
+                <div class="weui-cell__bd">
+                    <input id="inputMobilephone" class="weui-input" type="number" pattern="[0-9]*" placeholder="请输入手机号">
+                </div>
+                <div class="weui-cell__ft">
+                    <button id="buttonCode" class="weui-vcode-btn" disabled="disabled">获取手机验证码</button>
+                </div>
+            </div> 
+            <div class="weui-cell weui-cell_vcode">
+                <div class="weui-cell__hd"><label class="weui-label">手机验证码</label></div>
+                <div class="weui-cell__bd">
+                    <input id="inputCheckCode" class="weui-input" type="number" disabled="disabled" placeholder="请输入手机验证码"/>
+                </div>
+            </div>
+        </div>
+        <div id="formRemark" class="weui-cells__tips">底部说明文字底部说明文字</div>
+        
+        <div class="weui-btn-area">
+            <a class="weui-btn weui-btn_primary" href="javascript:" id="buttonUserReg">确定</a>
+        </div>
+        </div>
+
+		<div id="pageFt" class="page__ft">
+			<a href="javascript:myHome()"><img width="168"
+				src="../images/icon_footer_link.png" /></a>
+		</div>
+	</div>
+	
+	<!--BEGIN toast-->
+    <div id="toast1" style="display: none;">
+        <div class="weui-mask_transparent"></div>
+        <div class="weui-toast">
+            <i class="weui-icon-success-no-circle weui-icon_toast"></i>
+            <p id="toast1Message" class="weui-toast__content">OK</p>
+        </div>
+    </div>
+    <!--end toast-->
+	
+</body>
+
+<script type="text/javascript">
+	
+	//document.getElementById("");
+	//new Node().nodeValue;
+
+	var pageBd = document.getElementById("pageBd");
+	var formRemark = document.getElementById("formRemark");
+	var pageFt = document.getElementById("pageFt");
+	var formHead = document.getElementById("formHead");
+
+	var inputImageCode = document.getElementById("inputImageCode");
+	var buttonCode = document.getElementById("buttonCode");
+	var buttonUserReg = document.getElementById("buttonUserReg");
+
+	var inputMobilephone = document.getElementById("inputMobilephone");
+	var inputCheckCode = document.getElementById("inputCheckCode");
+	var toast1 = document.getElementById("toast1");
+	var toast1Message = document.getElementById("toast1Message");
+	
+	var wait=60;
+	
+	//var urlSendCheckCode = "../json/sendCheckCode.json";
+	//var urlUserReg = "../json/userReg.json";
+	var urlSendCheckCode = "../user/sendMobileCheckCode.do";
+	var urlUserReg = "../user/userReg.do";
+
+	
+	var sendCheckCode = function()
+	{
+		ajaxPost(urlSendCheckCode, "mobilephone=" + inputMobilephone.value
+				+ "&schoolWX=" + schoolWX, function(stringData) {
+			//console.info(stringData);
+			var data = JSON.parse(stringData);
+			if (data.status == "0") {
+				toast1Message.innerText = "请注意查收短信验证码"
+				toast1.style.display = "block";
+				setTimeout(function() {
+					toast1.style.display = "none";
+				}, 1000);
+			} else if (data.message && "" != data.message) {
+				formHead.innerText = data.message;
+			}
+		});
+	};
+	
+	var sendCheckCodeTimer = function(o) {
+		if (wait == 0) {
+			o.disabled = "";
+			o.style.cursor = "pointer";
+			o.innerText = "获取手机验证码";
+			wait = 60;
+		} else {
+			o.disabled = "disabled";
+			o.style.cursor = "default";
+			o.innerText = "重新发送(" + wait + ")";
+			wait--;
+			setTimeout(function() {
+				sendCheckCodeTimer(o)
+			}, 1000);
+		}
+	};
+
+	window.onload = function() {
+
+		schoolCode = request.QueryString("schoolCode");
+		schoolWX = request.QueryString("schoolWX");
+		schoolLogoUrl = request.QueryString("schoolLogoUrl");
+
+		var mobilephone = request.QueryString("mobilephone");
+		//console.info("mobilephone:"+mobilephone);
+		//console.info("schoolWX:"+schoolWX);
+
+		document.title = schoolWX;
+		pageFt.getElementsByTagName("a")[0].href = "javascript:myHome(\""
+				+ schoolCode + "\")";
+		pageFt.getElementsByTagName("img")[0].src = schoolLogoUrl;
+
+		inputMobilephone.value = mobilephone;
+		formRemark.innerHTML = "1. 图形验证码输入正确后方可获取/输入手机验证码<br/>2. 如无法获取验证码在微信公众号“"
+				+ schoolWX
+				+ "”留言给我们【手机号】，我们将第一时间帮你解决问题<br/>3. 直接<a id=\"aMobilephone\" href=\"userLogin.html?mobilephone="
+				+ inputMobilephone.value
+				+ "&schoolWX="
+				+ schoolWX
+				+ "&schoolCode="
+				+ schoolCode
+				+ "&schoolLogoUrl="
+				+ schoolLogoUrl + "\">去登录</a>";
+
+		var aMobilephone = document.getElementById("aMobilephone");
+
+		inputMobilephone.oninput = function() {
+			aMobilephone.href = "userLogin.html?mobilephone="
+					+ inputMobilephone.value + "&schoolWX=" + schoolWX
+					+ "&schoolCode=" + schoolCode + "&schoolLogoUrl="
+					+ schoolLogoUrl;
+		};
+
+		inputImageCode.oninput = function() {
+			//console.info(inputImageCode.value);
+			if (inputImageCode.value.toLowerCase() == "snnv") {
+				inputCheckCode.disabled = "";
+				buttonCode.disabled = "";
+				buttonCode.style.cursor = "pointer";
+			} else {
+				inputCheckCode.disabled = "disabled";
+				buttonCode.disabled = "disabled";
+				buttonCode.style.cursor = "default";
+			}
+		};
+
+		buttonCode.onclick = function() {
+			if (!inputMobilephone.value) {
+				formHead.innerText = "手机号必填";
+			}
+			else{
+				sendCheckCode();
+				sendCheckCodeTimer(buttonCode);
+			}
+		};
+
+		buttonUserReg.onclick = function() {
+			if (!inputMobilephone.value) {
+				formHead.innerText = "手机号必填";
+			} else if (!inputCheckCode.value) {
+				formHead.innerText = "验证码不能为空";
+			} else {
+				ajaxPost(urlUserReg, "mobilephone=" + inputMobilephone.value
+						+ "&checkCode=" + hex_md5(inputCheckCode.value),
+						function(stringData) {
+							//console.info(stringData);
+							var data = JSON.parse(stringData);
+							if (data.status == "0") {
+								toast1Message.innerText = "注册成功"
+								toast1.style.display = "block";
+								setTimeout(function() {
+									toast1.style.display = "none";
+									//history.back();
+									myHome(schoolCode);
+								}, 2000);
+							} else if (data.message && "" != data.message) {
+								formHead.innerText = data.message;
+							}
+						});
+			}
+
+		};
+
+	}
+</script>
+
+</html>
