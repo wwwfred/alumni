@@ -1,11 +1,12 @@
 var schoolCode;
 var schoolWX;
 var schoolLogoUrl;
-var baseUrl = "http://192.168.0.121:9090/alumni-app";
+var baseUrl = location.protocol + "//" + location.host;
 /*var baseUrl="http://alumni.wwwfred.net";*/
 
 var myHome = function(schoolCode)
 {
+//	console.info(baseUrl);
 	location.href = baseUrl + "/page/schoolList.html"+"?schoolCode="+ (schoolCode?schoolCode:"42_20_0001");
 };
 

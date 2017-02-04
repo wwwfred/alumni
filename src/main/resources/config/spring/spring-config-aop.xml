@@ -14,28 +14,23 @@
         http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
 
 	<!-- controller exception aop -->
-	<bean id="controllerAop" class="com.teshehui.framework.aop.exception.controller.ControllerAop" />
+	<bean id="controllerAop" class="net.wwwfred.framework.core.aop.exception.controller.ControllerAop" />
 	<!-- manager exception aop -->
-	<bean id="managerAop" class="com.teshehui.framework.aop.exception.manager.ManagerAop" />
+	<bean id="managerAop" class="net.wwwfred.framework.core.aop.exception.manager.ManagerAop" />
 	<!-- logAop -->
-	<bean id="logAop" class="com.teshehui.framework.aop.log.LogAop"/>
-	<!-- monitorAop -->
-	<!-- <bean id="monitorAop" class="com.teshehui.framework.aop.monitor.MonitorAop"/> -->
-	<!-- cacheAop -->
-	<bean id="cacheAop" class="com.teshehui.framework.aop.cache.CacheAop">
+	<bean id="logAop" class="net.wwwfred.framework.core.aop.log.LogAop"/>
+	<bean id="cacheAop" class="net.wwwfred.framework.core.aop.cache.CacheAop">
 		<!-- <property name="memCache" ref="memCache"></property> -->
 		<property name="redisCache" ref="redisCache"></property>
 	</bean>
 	
 	<aop:config>
-		<aop:pointcut id="controllerPointCut" expression="execution(* com.teshehui..controller..*.*(..))"/>
-		<aop:pointcut id="managerPointCut" expression="execution(* com.teshehui..manager..*.*(..))"/>
+		<aop:pointcut id="controllerPointCut" expression="execution(* net.wwwfred.yw.alumni..controller..*.*(..))"/>
+		<aop:pointcut id="managerPointCut" expression="execution(* net.wwwfred.yw.alumni..manager..*.*(..))"/>
 		<aop:pointcut id="logPointCut"
-				expression="(@annotation(com.teshehui.framework.aop.log.LogAnnotaion))||(@within(com.teshehui.framework.aop.log.LogAnnotaion))" />
-		<!-- <aop:pointcut id="monitorPointCut"
-				expression="(@annotation(com.teshehui.framework.aop.monitor.MonitorAnnotaion))||(@within(com.teshehui.framework.aop.monitor.MonitorAnnotaion))" /> -->
+				expression="(@annotation(net.wwwfred.framework.core.aop.log.LogAnnotaion))||(@within(net.wwwfred.framework.core.aop.log.LogAnnotaion))" />
 		<aop:pointcut id="cachePointCut"
-				expression="(@annotation(com.teshehui.framework.aop.cache.CacheAnnotaion))||(@within(com.teshehui.framework.aop.cache.CacheAnnotaion))" />
+				expression="(@annotation(net.wwwfred.framework.core.aop.cache.CacheAnnotaion))||(@within(net.wwwfred.framework.core.aop.cache.CacheAnnotaion))" />
 				
 		<aop:aspect order="1" id="controllerAspect" ref="controllerAop">
 			<aop:around pointcut-ref="controllerPointCut" method="controllerProxy"/>
@@ -46,10 +41,7 @@
 		<aop:aspect order="3" id="logAspect" ref="logAop">
 			<aop:around pointcut-ref="logPointCut" method="logProxy" />
 		</aop:aspect>
-		<!-- <aop:aspect order="4" id="monitorAspect" ref="monitorAop">
-			<aop:around pointcut-ref="monitorPointCut" method="monitorProxy" />
-		</aop:aspect> -->
-		<aop:aspect order="5" id="cacheAspect" ref="cacheAop">
+		<aop:aspect order="4" id="cacheAspect" ref="cacheAop">
 			<aop:around pointcut-ref="cachePointCut" method="cacheProxy" />
 		</aop:aspect>
 		

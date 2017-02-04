@@ -28,7 +28,7 @@
 	</settings>
 	
 	<plugins>
- 		<plugin interceptor="com.teshehui.framework.dao.mybatis.interceptor.PaginationInterceptor" />
+ 		<plugin interceptor="net.wwwfred.framework.core.dao.mybatis.interceptor.PaginationInterceptor" />
 	</plugins>
 	
 </configuration>

@@ -62,7 +62,7 @@
 	</bean>
 	
 	<!-- 通用的mybatisDao -->
-	<bean id="mybatisDao" class="com.teshehui.framework.dao.mybatis.impl.MybatisDaoImpl">
+	<bean id="mybatisDao" class="net.wwwfred.framework.core.dao.mybatis.impl.MybatisDaoImpl">
 		<property name="sqlSessionTemplate"><ref bean="mybatisSessionTemplate"/></property>
 	</bean>
 	

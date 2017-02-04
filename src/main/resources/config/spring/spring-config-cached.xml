@@ -41,7 +41,7 @@
     <bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">  
         <property name="connectionFactory"   ref="jedisConnectionFactory" />  
     </bean>
-    <bean id="redisCache" class="com.teshehui.framework.cache.impl.RedisCacheImpl" >
+    <bean id="redisCache" class="net.wwwfred.framework.core.cache.impl.RedisCacheImpl" >
          <property name="redisTemplate"   ref="redisTemplate" /> 
          <!-- <property name="cachedVersion" value="${redis.version}"/>  -->
 	</bean>  
@@ -84,7 +84,7 @@
 		</constructor-arg>
 	</bean>
 	
-	<bean id="memCache" class="com.teshehui.framework.cache.impl.MemCacheImpl">
+	<bean id="memCache" class="net.wwwfred.framework.core.cache.impl.MemCacheImpl">
 		<property name="client" ref="thirdMemcachedClient"/>
 		<property name="cachedVersion" value="${memcache.version}"/>
 		<!-- <property name="redisCache" ref="redisCache"></property> -->

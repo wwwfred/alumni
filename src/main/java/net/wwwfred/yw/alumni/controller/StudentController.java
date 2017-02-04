@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.wwwfred.framework.core.exception.TeshehuiRuntimeException;
 import net.wwwfred.framework.core.web.HttpServletRequestWrapper;
 import net.wwwfred.framework.core.web.ServletUtil;
-import net.wwwfred.framework.po.UploadFilePO;
+import net.wwwfred.framework.core.web.UploadFilePO;
 import net.wwwfred.framework.spi.response.BaseResponse;
 import net.wwwfred.framework.util.charset.PinyinUtil;
 import net.wwwfred.framework.util.code.CodeUtil;
