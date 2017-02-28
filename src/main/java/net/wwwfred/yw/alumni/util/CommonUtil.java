@@ -4,7 +4,7 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.wwwfred.framework.core.exception.TeshehuiRuntimeException;
+import net.wwwfred.framework.core.exception.FrameworkRuntimeException;
 import net.wwwfred.framework.core.web.ServletUtil;
 import net.wwwfred.framework.util.io.IOUtil;
 import net.wwwfred.framework.util.json.JSONUtil;
@@ -34,7 +34,7 @@ public class CommonUtil {
 			String msg = root.elementText("msg");
 			//String smsid = root.elementText("smsid");
 			if(!"2".equals(code)){
-				throw new TeshehuiRuntimeException(msg);
+				throw new FrameworkRuntimeException(msg);
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -57,7 +57,7 @@ public class CommonUtil {
     		String responseData = new String(IOUtil.getByteArrayFromHttpUrl(url+"?"+ServletUtil.mapToPostParam(querys, encoding),null, new Object[][]{{"Authorization","APPCODE 7560693a535e48038691d32fd9d8cb6f"}}),Charset.forName(encoding));
     		Map<String,String> responseMap = JSONUtil.toMap(responseData, String.class);
     		if(responseMap.get("success")==null||!Boolean.parseBoolean(responseMap.get("success")))
-    			throw new TeshehuiRuntimeException(responseMap.get("message"));
+    			throw new FrameworkRuntimeException(responseMap.get("message"));
     		LogUtil.i("useTime="+(System.currentTimeMillis()-startTime)+",sendMessage2 success,mobile="+mobilePhone+",checkCode="+checkCode+",responseData="+responseData);
     	} catch (Exception e) {
 			// TODO: handle exception

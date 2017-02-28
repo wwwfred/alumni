@@ -13,7 +13,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.wwwfred.framework.core.exception.TeshehuiRuntimeException;
+import net.wwwfred.framework.core.exception.FrameworkRuntimeException;
 import net.wwwfred.framework.core.web.HttpServletRequestWrapper;
 import net.wwwfred.framework.core.web.ServletUtil;
 import net.wwwfred.framework.core.web.UploadFilePO;
@@ -159,25 +159,25 @@ public class StudentController {
 		String mobilephone = StringUtil.toString(requestMap.get("mobilephone"));
 		if(CodeUtil.isEmpty(studentCode,mobilephone))
 		{
-			throw new TeshehuiRuntimeException("认领学生，学生姓名与登录的用户都不能为空");
+			throw new FrameworkRuntimeException("认领学生，学生姓名与登录的用户都不能为空");
 		}
 		
 		LoginPO loginPO = (LoginPO) request.getSession().getAttribute(sessionAttributeLoginUserKey);
 		if(loginPO==null||!loginPO.getMobilephone().equals(mobilephone))
 		{
-			throw new TeshehuiRuntimeException("认领学生必须先登录");
+			throw new FrameworkRuntimeException("认领学生必须先登录");
 		}
 		
 		YearStudentModel yearStudentModel = studentService.queryYearStudent(studentCode);
 		if(!CodeUtil.isEmpty(yearStudentModel.getStudentID()))
 		{
-			throw new TeshehuiRuntimeException("该学生已被认领不能再次被认领");
+			throw new FrameworkRuntimeException("该学生已被认领不能再次被认领");
 		}
 		
 		UserModel userModel = userService.queryUser(mobilephone);
 		if(!CodeUtil.isEmpty(userModel.getStudentID()))
 		{
-			throw new TeshehuiRuntimeException("该登录的用户已认领了一名学生，不可同时认领多名学生");
+			throw new FrameworkRuntimeException("该登录的用户已认领了一名学生，不可同时认领多名学生");
 		}
 		
 		String headUrl = null;
@@ -222,24 +222,24 @@ public class StudentController {
 		String studentCode = request.getParameter("studentCode");
 		if(studentCode==null)
 		{
-			throw new TeshehuiRuntimeException("查看学生详细信息，学生编码不能为空");
+			throw new FrameworkRuntimeException("查看学生详细信息，学生编码不能为空");
 		}
 		
 		LoginPO loginPO = (LoginPO) request.getSession().getAttribute(sessionAttributeLoginUserKey);
 		if(loginPO==null||CodeUtil.isEmpty(loginPO.getMobilephone()))
 		{
-			throw new TeshehuiRuntimeException("查看学生详细信息，必须先登录");
+			throw new FrameworkRuntimeException("查看学生详细信息，必须先登录");
 		}
 		else if(CodeUtil.isEmpty(loginPO.getStudentID()))
 		{
-			throw new TeshehuiRuntimeException("查看学生详细信息，登录后必须先认领了自己");
+			throw new FrameworkRuntimeException("查看学生详细信息，登录后必须先认领了自己");
 		}
 		
 		YearStudentModel yearStudentModel = studentService.queryYearStudent(studentCode);
 		Long studentId = yearStudentModel.getStudentID();
 		if(CodeUtil.isEmpty(studentId))
 		{
-			throw new TeshehuiRuntimeException("查看学生详细信息，该学生必须被认领");
+			throw new FrameworkRuntimeException("查看学生详细信息，该学生必须被认领");
 		}
 		List<StudentModel> studentModelList = studentService.queryStudent(Arrays.asList(studentId));
 		StudentModel studentModel = CodeUtil.isEmpty(studentModelList)?null:studentModelList.get(0);

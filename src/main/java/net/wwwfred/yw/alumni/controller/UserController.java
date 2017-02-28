@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.wwwfred.framework.core.cache.RedisCache;
-import net.wwwfred.framework.core.exception.TeshehuiRuntimeException;
+import net.wwwfred.framework.core.exception.FrameworkRuntimeException;
 import net.wwwfred.framework.spi.response.BaseResponse;
 import net.wwwfred.framework.util.code.CodeUtil;
 import net.wwwfred.framework.util.code.NumberingRuleUtil;
@@ -74,7 +74,7 @@ public class UserController {
 		
 		if(CodeUtil.isEmpty(mobilephone))
 		{
-			throw new TeshehuiRuntimeException("发送短信验证码，手机号不能为空");
+			throw new FrameworkRuntimeException("发送短信验证码，手机号不能为空");
 		}
 		
 		UserModel user = userService.queryUser(mobilephone);
@@ -82,11 +82,11 @@ public class UserController {
 		{
 			if(!user.getUserLevel().equals(UserLevelEnum.visitor.getCode()))
 			{
-				throw new TeshehuiRuntimeException("该手机号的用户已经注册，不能用户手机号验证码登录，请改用账号密码登录");
+				throw new FrameworkRuntimeException("该手机号的用户已经注册，不能用户手机号验证码登录，请改用账号密码登录");
 			}
 			if(user.getUserLevel()==UserLevelEnum.deprecated.getCode())
 			{
-				throw new TeshehuiRuntimeException("该手机号用户已被系统注销");
+				throw new FrameworkRuntimeException("该手机号用户已被系统注销");
 			}
 			if(user.getUserLevel()==UserLevelEnum.blacker.getCode()
 					||user.getRegMsgCount()>=user.getRegMsgMaxCount())
@@ -98,7 +98,7 @@ public class UserController {
 					user.setUpdateTime(new Date());
 					userService.updateUser(user);
 				}
-				throw new TeshehuiRuntimeException("该手机号多次发短信未注册为用户，已被系统自动拉入黑名单，如有疑问请在微信公众号“"+schoolWX+"”给我们留言，将第一时间答复你");
+				throw new FrameworkRuntimeException("该手机号多次发短信未注册为用户，已被系统自动拉入黑名单，如有疑问请在微信公众号“"+schoolWX+"”给我们留言，将第一时间答复你");
 			}
 		}
 		
@@ -137,28 +137,28 @@ public class UserController {
 		String checkCode = request.getParameter("checkCode");
 		if(CodeUtil.isEmpty(mobilephone,checkCode))
 		{
-			throw new TeshehuiRuntimeException("用户注册，手机号、验证码都不能为空");
+			throw new FrameworkRuntimeException("用户注册，手机号、验证码都不能为空");
 		}
 		
 		UserModel user = userService.queryUser(mobilephone);
 		if(user==null)
 		{
-			throw new TeshehuiRuntimeException("注册的手机号还未发送过验证码，请确认！");
+			throw new FrameworkRuntimeException("注册的手机号还未发送过验证码，请确认！");
 		}
 		if(user.getUserLevel()==UserLevelEnum.deprecated.getCode())
 		{
-			throw new TeshehuiRuntimeException("该手机号用户已被系统注销");
+			throw new FrameworkRuntimeException("该手机号用户已被系统注销");
 		}
 		if(!UserLevelEnum.visitor.getCode().equals(user.getUserLevel())
 				&&!UserLevelEnum.blacker.getCode().equals(user.getUserLevel()))
 		{
-			throw new TeshehuiRuntimeException("用户已注册不能重复注册");
+			throw new FrameworkRuntimeException("用户已注册不能重复注册");
 		}
 		
 		String validCheckCode = (String) redisCache.getObject(userRegCheckCodePrefix+mobilephone);
 		if(!checkCode.equals(EncryptUtil.getMD5(validCheckCode)))
 		{
-			throw new TeshehuiRuntimeException("验证码不正确或已失效");
+			throw new FrameworkRuntimeException("验证码不正确或已失效");
 		}
 		
 		user.setUserLevel(UserLevelEnum.register.getCode());
@@ -181,26 +181,26 @@ public class UserController {
 		String password = request.getParameter("password");
 		if(CodeUtil.isEmpty(mobilephone,password))
 		{
-			throw new TeshehuiRuntimeException("用户登录，手机号、密码都不能为空");
+			throw new FrameworkRuntimeException("用户登录，手机号、密码都不能为空");
 		}
 		
 		UserModel user = userService.queryUser(mobilephone);
 		if(user==null||UserLevelEnum.visitor.getCode().equals(user.getUserLevel()))
 		{
-			throw new TeshehuiRuntimeException("该手机号还未注册，不能登录");
+			throw new FrameworkRuntimeException("该手机号还未注册，不能登录");
 		}
 		if(user.getUserLevel()==UserLevelEnum.deprecated.getCode())
 		{
-			throw new TeshehuiRuntimeException("该手机号用户已被系统注销");
+			throw new FrameworkRuntimeException("该手机号用户已被系统注销");
 		}
 		if(UserLevelEnum.blacker.getCode().equals(user.getUserLevel()))
 		{
-			throw new TeshehuiRuntimeException("该用户有违规操作，已被列入黑名单暂不允许登录");
+			throw new FrameworkRuntimeException("该用户有违规操作，已被列入黑名单暂不允许登录");
 		}
 		
 		if(!password.equals(user.getPassword()))
 		{
-			throw new TeshehuiRuntimeException("用户密码不正确");
+			throw new FrameworkRuntimeException("用户密码不正确");
 		}
 		user.setLoginCount(user.getLoginCount()+1);
 		userService.updateUser(user);
@@ -227,26 +227,26 @@ public class UserController {
 		String newPassword = request.getParameter("newPassword");
 		if(CodeUtil.isEmpty(mobilephone,password,newPassword))
 		{
-			throw new TeshehuiRuntimeException("修改密码，手机号、密码都不能为空");
+			throw new FrameworkRuntimeException("修改密码，手机号、密码都不能为空");
 		}
 		
 		UserModel user = userService.queryUser(mobilephone);
 		if(user==null||UserLevelEnum.visitor.getCode().equals(user.getUserLevel()))
 		{
-			throw new TeshehuiRuntimeException("该手机号还未注册，不能修改密码");
+			throw new FrameworkRuntimeException("该手机号还未注册，不能修改密码");
 		}
 		if(user.getUserLevel()==UserLevelEnum.deprecated.getCode())
 		{
-			throw new TeshehuiRuntimeException("该手机号用户已被系统注销");
+			throw new FrameworkRuntimeException("该手机号用户已被系统注销");
 		}
 		if(UserLevelEnum.blacker.getCode().equals(user.getUserLevel()))
 		{
-			throw new TeshehuiRuntimeException("该用户有违规草操作，已被列入黑名单暂不允许登录");
+			throw new FrameworkRuntimeException("该用户有违规草操作，已被列入黑名单暂不允许登录");
 		}
 		
 		if(!password.equals(user.getPassword()))
 		{
-			throw new TeshehuiRuntimeException("用户密码不正确");
+			throw new FrameworkRuntimeException("用户密码不正确");
 		}
 		user.setPassword(newPassword);
 		user.setLoginCount(user.getLoginCount()+1);
